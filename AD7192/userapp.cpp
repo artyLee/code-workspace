@@ -9,8 +9,11 @@
 #include "application.h"
 
 
+Serial1LogHandler logHandler(115200, LOG_LEVEL_WARN, {{"app",    LOG_LEVEL_ALL}});
+SYSTEM_MODE(MANUAL);
 void setup() {
 
+    ad7192Init();
 }
 
 void loop() {
