@@ -39,3 +39,22 @@ uint32_t ad7192ReadRegisterValue(uint8_t registerAddress, uint8_t bytesSize) {
 
     return(readRegisterValue);
 }
+
+void ad7192WriteRegisterValue(uint8_t registerAddress, uint32_t registerValue, uint8_t bytesSize) {
+    uint8_t txBuffer[4] = {0, 0, 0, 0};
+    uint8_t writeCommandByte = AD7192_COMM_WRITE | AD7192_COMM_ADDR(registerAddress);
+    txBuffer[0] = (registerValue >> 0)  & 0x000000FF;
+    txBuffer[1] = (registerValue >> 8)  & 0x000000FF;
+    txBuffer[2] = (registerValue >> 16) & 0x000000FF;
+    txBuffer[3] = (registerValue >> 24) & 0x000000FF;
+    SPI.beginTransaction(SPISettings(4*MHZ, MSBFIRST, SPI_MODE3));
+    digitalWrite(CS_PIN, LOW);
+    SPI.transfer(writeCommandByte);
+    while(bytesSize > 0) {
+        SPI.transfer(txBuffer[bytesSize - 1]);
+        bytesSize--;
+    }
+    digitalWrite(CS_PIN, HIGH);
+    SPI.endTransaction();
+}
+

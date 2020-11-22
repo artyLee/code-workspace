@@ -38,5 +38,11 @@ void loop() {
     Log.printf("Register 6 value: 0x%lx \r\n", registervalue[6]);
     Log.printf("Register 7 value: 0x%lx \r\n", registervalue[7]);
     Log.print("-------------------------------------------\r\n");
+    
+    // Test write function
+    static uint32_t writeRegisterValue = 0x080060;
+    writeRegisterValue = writeRegisterValue + 1;
+    Log.printf("To write register 1 value: 0x%lx \r\n", writeRegisterValue);
+    ad7192WriteRegisterValue(AD7192_REG_MODE, writeRegisterValue, 3);
 }
 
