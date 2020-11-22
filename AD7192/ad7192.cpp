@@ -21,3 +21,21 @@ void ad7192SoftwareReset(void) {
     delay(1);                   // Following a reset, the user should wait a period of 500 μs before addressing the serial interface
 }
 
+uint32_t ad7192ReadRegisterValue(uint8_t registerAddress, uint8_t bytesSize) {
+    uint8_t receiveBuffer = 0;
+    uint8_t byteIndex = 0;
+    uint32_t readRegisterValue = 0;
+    uint8_t writeCommandByte = AD7192_COMM_READ | AD7192_COMM_ADDR(registerAddress);
+    SPI.beginTransaction(SPISettings(4*MHZ, MSBFIRST, SPI_MODE3));
+    digitalWrite(CS_PIN, LOW);
+    SPI.transfer(writeCommandByte);
+    while(byteIndex < bytesSize) {
+        receiveBuffer = SPI.transfer(0);
+        readRegisterValue = (readRegisterValue << 8) + receiveBuffer;
+        byteIndex++;
+    }
+    digitalWrite(CS_PIN, HIGH);
+    SPI.endTransaction();
+
+    return(readRegisterValue);
+}
