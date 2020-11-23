@@ -2,6 +2,19 @@
 #include "ad7192_defs.h"
 
 #define CS_PIN                  D5 // Chip select pin
+/* AD7192 register 0~7 default(Power-On/Reset) value:
+    0x00,           // 0 - status register
+    0x080060,       // 1 - mode register
+    0x000117,       // 2 - configuration register
+    0x000000,       // 3 - data register
+    0xa0,           // 4 - ID register
+    0x00,           // 5 - GPOCON register
+    0x800000,       // 6 - offset register
+    0x553f60        // 7 - full-scale register
+*/
+uint32_t registerMap[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+uint8_t registerSize[8] = {1, 3, 3, 3, 1, 1, 3, 3};
+
 void ad7192Init(void) {
     pinMode(CS_PIN, OUTPUT); // CS pin initialization
     digitalWrite(CS_PIN, HIGH);
@@ -19,6 +32,38 @@ void ad7192SoftwareReset(void) {
     digitalWrite(CS_PIN, HIGH);
     SPI.endTransaction();
     delay(1);                   // Following a reset, the user should wait a period of 500 μs before addressing the serial interface
+}
+
+void ad7192SetPGAGain(uint8_t gain) {
+    uint32_t gainSetting = 0;
+    uint8_t regAddress = AD7192_REG_CONF;
+    switch (gain) { // Valid Gain settings are 1, 8, 16, 32, 64, 128
+        case 1:
+            gainSetting = 0x0; // G2 G1 GO: 000
+            break;
+        case 8:
+            gainSetting = 0x3; // G2 G1 GO: 011
+            break;
+        case 16:
+            gainSetting = 0x4; // G2 G1 GO: 100
+            break;
+        case 32:
+            gainSetting = 0x5; // G2 G1 GO: 101
+            break;
+        case 64:
+            gainSetting = 0x6; // G2 G1 GO: 110
+            break;
+        case 128:
+            gainSetting = 0x7; // G2 G1 GO: 111
+            break;
+        default:
+            Log.error("ERROR - Invalid Gain Setting. Valid Gain settings are 1, 8, 16, 32, 64, 128");
+            return;
+    }
+    registerMap[regAddress] = ad7192ReadRegisterValue(regAddress, registerSize[regAddress]); // Read before setting configuration register value
+    registerMap[regAddress] &= 0xFFFFF8; // keep all bit values except gain bits
+    registerMap[regAddress] |= gainSetting; // setting gain bits values (G2 G1 G0)
+    ad7192WriteRegisterValue(regAddress, registerMap[regAddress], registerSize[regAddress]); // After write setting value to configuration register
 }
 
 uint32_t ad7192ReadRegisterValue(uint8_t registerAddress, uint8_t bytesSize) {

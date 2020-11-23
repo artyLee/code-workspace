@@ -44,5 +44,11 @@ void loop() {
     writeRegisterValue = writeRegisterValue + 1;
     Log.printf("To write register 1 value: 0x%lx \r\n", writeRegisterValue);
     ad7192WriteRegisterValue(AD7192_REG_MODE, writeRegisterValue, 3);
+    
+    // Test setting gain
+    uint8_t setgain = 8;
+    Log.printf("To set gain value: 0x%x \r\n", setgain);
+    ad7192SetPGAGain(setgain);
+    
 }
 
