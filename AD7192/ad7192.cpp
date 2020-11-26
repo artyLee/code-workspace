@@ -66,6 +66,15 @@ void ad7192SetPGAGain(uint8_t gain) {
     ad7192WriteRegisterValue(regAddress, registerMap[regAddress], registerSize[regAddress]); // After write setting value to configuration register
 }
 
+void ad7192InternalZeroScaleCalibration(void) {
+    // 1.read--->2.edit--->3.write
+    uint8_t regAddress = AD7192_REG_MODE;
+    registerMap[regAddress] = ad7192ReadRegisterValue(regAddress, registerSize[regAddress]); // Read before setting mode register value
+    registerMap[regAddress] &= 0x1FFFFF; // keep all bit values except mode select bits(MD2 MD1 MD0)
+    registerMap[regAddress] |= 0x800000; // internal zero scale calibration(MD2 MD1 MD0 = 1, 0, 0)
+    ad7192WriteRegisterValue(regAddress, registerMap[regAddress], registerSize[regAddress]); // After overwriting setting value to mode register
+}
+
 uint32_t ad7192ReadRegisterValue(uint8_t registerAddress, uint8_t bytesSize) {
     uint8_t receiveBuffer = 0;
     uint8_t byteIndex = 0;

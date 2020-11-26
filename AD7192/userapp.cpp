@@ -50,5 +50,10 @@ void loop() {
     Log.printf("To set gain value: 0x%x \r\n", setgain);
     ad7192SetPGAGain(setgain);
     
+    // Test internal zero calibration
+    Log.printf("To calibrate internal zero-scale\r\n");
+    ad7192InternalZeroScaleCalibration();
+    registervalue[AD7192_REG_MODE] = ad7192ReadRegisterValue(AD7192_REG_MODE, 3);
+    Log.printf("Register AD7192_REG_MODE value: 0x%lx \r\n", registervalue[AD7192_REG_MODE]);
 }
 
