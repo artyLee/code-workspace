@@ -55,5 +55,11 @@ void loop() {
     ad7192InternalZeroScaleCalibration();
     registervalue[AD7192_REG_MODE] = ad7192ReadRegisterValue(AD7192_REG_MODE, 3);
     Log.printf("Register AD7192_REG_MODE value: 0x%lx \r\n", registervalue[AD7192_REG_MODE]);
+
+    // Test internal full calibration
+    Log.printf("To calibrate internal full-scale\r\n");
+    ad7192InternalFullScaleCalibration();
+    registervalue[AD7192_REG_MODE] = ad7192ReadRegisterValue(AD7192_REG_MODE, 3);
+    Log.printf("Register AD7192_REG_MODE value: 0x%lx \r\n", registervalue[AD7192_REG_MODE]);
 }
 
