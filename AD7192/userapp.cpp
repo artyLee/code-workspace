@@ -69,5 +69,11 @@ void loop() {
         registervalue[AD7192_REG_CONF] = ad7192ReadRegisterValue(AD7192_REG_CONF, 3);
         Log.printf("Register AD7192_REG_CONF value: 0x%lx \r\n", registervalue[AD7192_REG_CONF]);
     }
+
+    // Test single conversion
+    Log.printf("To Test setting single conversion\r\n");
+    ad7192StartSingleConversion();
+    registervalue[AD7192_REG_MODE] = ad7192ReadRegisterValue(AD7192_REG_MODE, 3);
+    Log.printf("Register AD7192_REG_MODE value: 0x%lx \r\n", registervalue[AD7192_REG_MODE]);
 }
 

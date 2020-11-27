@@ -94,6 +94,14 @@ void ad7192SetChannel(uint8_t channel) { // Noted: channel number should be refe
     ad7192WriteRegisterValue(regAddress, registerMap[regAddress], registerSize[regAddress]);// write channel selected to Configuration register
 }
 
+void ad7192StartSingleConversion(void) {
+    uint8_t regAddress = AD7192_REG_MODE;
+    registerMap[regAddress] = ad7192ReadRegisterValue(regAddress, registerSize[regAddress]); // Read before setting Mode register value
+    registerMap[regAddress] &= 0x1FFFFF; // keep all bit values except MR23-MR21 bits
+    registerMap[regAddress] |= 0x200000; // setting single conversion mode bits
+    ad7192WriteRegisterValue(regAddress, registerMap[regAddress], registerSize[regAddress]);// write channel conversion mode to Mode register
+}
+
 uint32_t ad7192ReadRegisterValue(uint8_t registerAddress, uint8_t bytesSize) {
     uint8_t receiveBuffer = 0;
     uint8_t byteIndex = 0;
