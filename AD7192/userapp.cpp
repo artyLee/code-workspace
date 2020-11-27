@@ -61,5 +61,13 @@ void loop() {
     ad7192InternalFullScaleCalibration();
     registervalue[AD7192_REG_MODE] = ad7192ReadRegisterValue(AD7192_REG_MODE, 3);
     Log.printf("Register AD7192_REG_MODE value: 0x%lx \r\n", registervalue[AD7192_REG_MODE]);
+
+    // Test setting channel
+    Log.printf("To Test setting channel\r\n");
+    for(char i = 0; i <= 7; i ++) {
+        ad7192SetChannel(i);
+        registervalue[AD7192_REG_CONF] = ad7192ReadRegisterValue(AD7192_REG_CONF, 3);
+        Log.printf("Register AD7192_REG_CONF value: 0x%lx \r\n", registervalue[AD7192_REG_CONF]);
+    }
 }
 

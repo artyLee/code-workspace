@@ -84,6 +84,16 @@ void ad7192InternalFullScaleCalibration(void) {
     ad7192WriteRegisterValue(regAddress, registerMap[regAddress], registerSize[regAddress]); // After overwriting setting value to mode register
 }
 
+void ad7192SetChannel(uint8_t channel) { // Noted: channel number should be reference 0: AIN1+ AIN2-; 1:AIN3+ AIN4-; 2: temperature sensor; 3:AIN2+ AIN2-; 4:AIN1 AINCOM; 5:AIN2 AINCOM; 6:AIN3 AINCOM; 7:AIN4 AINCOM;
+    uint8_t regAddress = AD7192_REG_CONF;
+    registerMap[regAddress] = ad7192ReadRegisterValue(regAddress, registerSize[regAddress]); // Read before setting Conffigration register value
+    uint32_t shiftvalue = 0x00000100;
+    uint32_t channelBits = shiftvalue << channel; // generate Channel settings bits for Configuration write
+    registerMap[regAddress] &= 0xFF00FF;          // keep all bit values except Channel bits(CON15~CON8--->CH7~CH0)
+    registerMap[regAddress] |= channelBits;       // setting Channel bits to Config register
+    ad7192WriteRegisterValue(regAddress, registerMap[regAddress], registerSize[regAddress]);// write channel selected to Configuration register
+}
+
 uint32_t ad7192ReadRegisterValue(uint8_t registerAddress, uint8_t bytesSize) {
     uint8_t receiveBuffer = 0;
     uint8_t byteIndex = 0;

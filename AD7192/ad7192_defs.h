@@ -18,3 +18,13 @@
 #define AD7192_COMM_ADDR(x)     (((x) & 0x7) << 3) // Register Address. 
 #define AD7192_COMM_CREAD       (1 << 2)           // Continuous Read of Data Register.
 
+/* Configuration Register Bit Designations (AD7192_REG_CONF) */
+#define AD7192_CH_AIN1P_AIN2M   0 // AIN1(+) - AIN2(-)
+#define AD7192_CH_AIN3P_AIN4M   1 // AIN3(+) - AIN4(-)
+#define AD7192_CH_TEMP          2 // Temp Sensor
+#define AD7192_CH_AIN2P_AIN2M   3 // AIN2(+) - AIN2(-)
+#define AD7192_CH_AIN1          4 // AIN1 - AINCOM
+#define AD7192_CH_AIN2          5 // AIN2 - AINCOM
+#define AD7192_CH_AIN3          6 // AIN3 - AINCOM
+#define AD7192_CH_AIN4          7 // AIN4 - AINCOM
+
