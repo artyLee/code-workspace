@@ -12,7 +12,7 @@ void ad7192InternalZeroScaleCalibration(void);
 void ad7192InternalFullScaleCalibration(void);
 void ad7192InternalZeroFullScaleCalibration(void);
 void ad7192StartSingleConversion(void);
-void ad7192StartContinuousConversion(uint8_t Channel);
+void ad7192StartContinuousConversion(void);
 void ad7192WriteRegisterValue(uint8_t registerAddress, uint32_t registerValue, uint8_t bytesSize);
 uint32_t ad7192ReadRegisterValue(uint8_t registerAddress, uint8_t bytesSize);
 uint32_t ad7192ReadConvertingData(void);
