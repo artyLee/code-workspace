@@ -81,5 +81,9 @@ void loop() {
     ad7192StartContinuousConversion();
     registervalue[AD7192_REG_MODE] = ad7192ReadRegisterValue(AD7192_REG_MODE, 3);
     Log.printf("Register AD7192_REG_MODE value: 0x%lx \r\n", registervalue[AD7192_REG_MODE]);
+
+    // Test zero and full calibration
+    Log.printf("To calibrate internal zero and full scale\r\n");
+    ad7192InternalZeroFullScaleCalibration();
 }
 
