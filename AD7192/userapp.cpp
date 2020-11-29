@@ -85,5 +85,12 @@ void loop() {
     // Test zero and full calibration
     Log.printf("To calibrate internal zero and full scale\r\n");
     ad7192InternalZeroFullScaleCalibration();
+
+    // Test filter rate select bit
+    uint16_t filterRate = 100;
+    Log.info("Setting Filter Rate Select Bits is: 0x%x", filterRate);
+    ad7192SetFilterSelectBit(filterRate);
+    registervalue[AD7192_REG_MODE] = ad7192ReadRegisterValue(AD7192_REG_MODE, 3);
+    Log.printf("Register AD7192_REG_MODE value: 0x%lx \r\n", registervalue[AD7192_REG_MODE]);
 }
 
