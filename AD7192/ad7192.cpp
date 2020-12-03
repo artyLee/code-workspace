@@ -127,6 +127,12 @@ void ad7192StartContinuousConversion(void) {
     ad7192WriteRegisterValue(regAddress, registerMap[regAddress], registerSize[regAddress]);// write channel conversion mode to Mode register
 }
 
+uint32_t ad7192ReadConvertingData(void) {
+    uint32_t regConvertData = 0;
+    regConvertData = ad7192ReadRegisterValue(AD7192_REG_DATA, registerSize[AD7192_REG_DATA]);
+    return (regConvertData);
+}
+
 uint32_t ad7192ReadRegisterValue(uint8_t registerAddress, uint8_t bytesSize) {
     uint8_t receiveBuffer = 0;
     uint8_t byteIndex = 0;
