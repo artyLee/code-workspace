@@ -2,6 +2,7 @@
 #include "ad7192_defs.h"
 
 #define CS_PIN                  D5 // Chip select pin
+#define V_REF                   3300 // millivolt reference voltage
 /* AD7192 register 0~7 default(Power-On/Reset) value:
     0x00,           // 0 - status register
     0x080060,       // 1 - mode register
@@ -132,6 +133,41 @@ uint32_t ad7192ReadConvertingData(void) {
     regConvertData = ad7192ReadRegisterValue(AD7192_REG_DATA, registerSize[AD7192_REG_DATA]);
     return (regConvertData);
 }
+
+float ad7192RawDataToVoltage(uint32_t rawData) {
+    float mvoltage = 0;
+    int PGASetting = 0;
+    int PGAGain = 0;
+    uint8_t regAddress = AD7192_REG_CONF;
+    registerMap[regAddress] = ad7192ReadRegisterValue(regAddress, registerSize[regAddress]);
+    PGASetting = registerMap[regAddress] & 0x000007;  // keep only the PGA setting bits
+    switch (PGASetting) { // Valid PGASetting are 0, 3, 4, 5, 6, 7
+        case 0:
+            PGAGain = 1; // G2 G1 GO: 000
+            break;
+        case 3:
+            PGAGain = 8; // G2 G1 GO: 011
+            break;
+        case 4:
+            PGAGain = 16; // G2 G1 GO: 100
+            break;
+        case 5:
+            PGAGain = 32; // G2 G1 GO: 101
+            break;
+        case 6:
+            PGAGain = 64; // G2 G1 GO: 110
+            break;
+        case 7:
+            PGAGain = 128; // G2 G1 GO: 111
+            break;
+        default:
+            Log.error("ERROR - Invalid Gain Setting. Valid Gain settings are 0, 3, 4, 5, 6, 7");
+            return -1;
+    }
+    mvoltage = (((float)rawData / (float)8388608) - (float)1) * (V_REF / (float)PGAGain);
+    return (mvoltage);
+}
+
 
 uint32_t ad7192ReadADCChannelData(uint8_t channel)  {
     uint32_t rawConvertData = 0;
