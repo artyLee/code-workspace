@@ -14,6 +14,9 @@ SYSTEM_MODE(MANUAL);
 void setup() {
 
     ad7192Init();
+    ad7192SetPGAGain(1);
+    ad7192SetFilterSelectBit(100);
+    ad7192InternalZeroFullScaleCalibration();
 }
 
 void loop() {
@@ -39,6 +42,7 @@ void loop() {
     Log.printf("Register 7 value: 0x%lx \r\n", registervalue[7]);
     Log.print("-------------------------------------------\r\n");
     
+/*   
     // Test write function
     static uint32_t writeRegisterValue = 0x080060;
     writeRegisterValue = writeRegisterValue + 1;
@@ -92,5 +96,12 @@ void loop() {
     ad7192SetFilterSelectBit(filterRate);
     registervalue[AD7192_REG_MODE] = ad7192ReadRegisterValue(AD7192_REG_MODE, 3);
     Log.printf("Register AD7192_REG_MODE value: 0x%lx \r\n", registervalue[AD7192_REG_MODE]);
+*/    
+    // Test ADC CH1 raw data to convert voltage
+    uint32_t rawData = 0;
+    float volt = 0;
+    rawData = ad7192ReadADCChannelData(AD7192_CH_AIN1);
+    volt = ad7192RawDataToVoltage(rawData);
+    Log.info("CH1 data: %lx, Voltage Measurement: %fmV", rawData, volt);
 }
 
