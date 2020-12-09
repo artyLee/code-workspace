@@ -9,9 +9,9 @@ To get started building firmware locally.
 
 # Resources
 
-- include file: `ad7192.h`, `ad7192_defs.h`
-- sourced file: `ad7192.cpp`
-- user application file: `userapp.cpp`
+- document file: `AD7192_cn.pdf`, `AD7192_en.pdf`
+- source code file: `ad7192.cpp`, `ad7192.h`, `ad7192_defs`
+- user examples file: `ad7192singlechannelconversion.cpp`
 
 ## Build System
 
