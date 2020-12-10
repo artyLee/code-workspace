@@ -1,8 +1,10 @@
 #include "ad7192.h"
 #include "ad7192_defs.h"
+#include "application.h"
 
 #define CS_PIN                  D5 // Chip select pin
 #define V_REF                   3300 // millivolt reference voltage
+
 /* AD7192 register 0~7 default(Power-On/Reset) value:
     0x00,           // 0 - status register
     0x080060,       // 1 - mode register
@@ -91,7 +93,7 @@ void ad7192InternalZeroFullScaleCalibration(void) {
 }
 
 void ad7192SetFilterSelectBit(uint16_t filterRate) {
-    if(filterRate > 0x3ff) {
+    if (filterRate > 0x3ff) { // FS9~FS0, the max value of 10bit data = 0x3ff
         Log.info("ERROR - Invalid Filter Rate Setting - no changes made.  Filter Rate is a 10-bit value");
         return;
     }
@@ -131,7 +133,7 @@ void ad7192StartContinuousConversion(void) {
 uint32_t ad7192ReadConvertingData(void) {
     uint32_t regConvertData = 0;
     regConvertData = ad7192ReadRegisterValue(AD7192_REG_DATA, registerSize[AD7192_REG_DATA]);
-    return (regConvertData);
+    return regConvertData;
 }
 
 float ad7192RawDataToVoltage(uint32_t rawData) {
@@ -165,7 +167,7 @@ float ad7192RawDataToVoltage(uint32_t rawData) {
             return -1;
     }
     mvoltage = (((float)rawData / (float)8388608) - (float)1) * (V_REF / (float)PGAGain);
-    return (mvoltage);
+    return mvoltage;
 }
 
 
@@ -175,7 +177,7 @@ uint32_t ad7192ReadADCChannelData(uint8_t channel)  {
     ad7192StartSingleConversion();              // write command to initial conversion mode
     delay(10);                                  // TODO: hardcoded wait time for data to be ready
     rawConvertData = ad7192ReadConvertingData();// read raw convertible data from ADC
-    return (rawConvertData);
+    return rawConvertData;
 }
 
 uint32_t ad7192ReadRegisterValue(uint8_t registerAddress, uint8_t bytesSize) {
@@ -193,8 +195,7 @@ uint32_t ad7192ReadRegisterValue(uint8_t registerAddress, uint8_t bytesSize) {
     }
     digitalWrite(CS_PIN, HIGH);
     SPI.endTransaction();
-
-    return(readRegisterValue);
+    return readRegisterValue;
 }
 
 void ad7192WriteRegisterValue(uint8_t registerAddress, uint32_t registerValue, uint8_t bytesSize) {
@@ -214,4 +215,3 @@ void ad7192WriteRegisterValue(uint8_t registerAddress, uint32_t registerValue, u
     digitalWrite(CS_PIN, HIGH);
     SPI.endTransaction();
 }
-

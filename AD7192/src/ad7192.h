@@ -1,5 +1,5 @@
 #pragma once
-#include "application.h"
+#include <stdio.h>
 
 void ad7192Init(void);
 void ad7192SoftwareReset(void);
