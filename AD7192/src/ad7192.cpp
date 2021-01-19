@@ -175,7 +175,7 @@ uint32_t ad7192ReadADCChannelData(uint8_t channel)  {
     uint32_t rawConvertData = 0;
     ad7192SetChannel(channel);                  // set one channel to be selected
     ad7192StartSingleConversion();              // write command to initial conversion mode
-    delay(10);                                  // TODO: hardcoded wait time for data to be ready
+    delay(100);                                 // TODO: hardcoded wait time for data to be ready
     rawConvertData = ad7192ReadConvertingData();// read raw convertible data from ADC
     return rawConvertData;
 }
